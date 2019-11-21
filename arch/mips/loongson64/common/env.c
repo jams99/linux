@@ -18,6 +18,8 @@
 #include <loongson.h>
 #include <boot_param.h>
 #include <workarounds.h>
+#include <asm/prom.h>
+#include <linux/of_fdt.h>
 
 u32 cpu_clock_freq;
 EXPORT_SYMBOL(cpu_clock_freq);
@@ -44,6 +46,13 @@ void __init prom_init_env(void)
 	unsigned int processor_id;
 
 #ifndef CONFIG_LEFI_FIRMWARE_INTERFACE
+#ifdef CONFIG_USE_OF
+	void * fdtp;
+
+	/* using built-in dtb */
+	fdtp = (void *)__dtb_start;
+	__dt_setup_arch(fdtp);
+#else
 	int *_prom_envp;
 	long l;
 
@@ -64,6 +73,7 @@ void __init prom_init_env(void)
 	loongson_sysconf.nr_uarts = 1;
 
 	pr_info("memsize=%u, highmemsize=%u\n", memsize, highmemsize);
+#endif
 #else
 	struct boot_params *boot_p;
 	struct loongson_params *loongson_p;

@@ -39,6 +39,7 @@ static inline void flush_micro_tlb(void)
 		write_c0_diag(LOONGSON_DIAG_ITLB);
 		break;
 	case CPU_LOONGSON3:
+	case CPU_LOONGSON2K:
 		write_c0_diag(LOONGSON_DIAG_ITLB | LOONGSON_DIAG_DTLB);
 		break;
 	default:

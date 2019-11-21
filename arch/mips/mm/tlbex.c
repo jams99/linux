@@ -93,6 +93,11 @@ static inline int __maybe_unused r10000_llsc_war(void)
 	return R10000_LLSC_WAR;
 }
 
+static inline int __maybe_unused loongson_llsc_war(void)
+{
+	return LOONGSON_LLSC_WAR;
+}
+
 static int use_bbit_insns(void)
 {
 	switch (current_cpu_type()) {
@@ -573,6 +578,7 @@ void build_tlb_write_entry(u32 **p, struct uasm_label **l,
 	case CPU_BMIPS5000:
 	case CPU_LOONGSON2:
 	case CPU_LOONGSON3:
+	case CPU_LOONGSON2K:
 	case CPU_R5500:
 		if (m4kc_tlbp_war())
 			uasm_i_nop(p);
@@ -942,7 +948,7 @@ build_get_pgd_vmalloc64(u32 **p, struct uasm_label **l, struct uasm_reloc **r,
 		 * to mimic that here by taking a load/istream page
 		 * fault.
 		 */
-		if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
+		if (loongson_llsc_war())
 			uasm_i_sync(p, 0);
 		UASM_i_LA(p, ptr, (unsigned long)tlb_do_page_fault_0);
 		uasm_i_jr(p, ptr);
@@ -1664,7 +1670,7 @@ static void
 iPTE_LW(u32 **p, unsigned int pte, unsigned int ptr)
 {
 #ifdef CONFIG_SMP
-	if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
+	if (loongson_llsc_war())
 		uasm_i_sync(p, 0);
 # ifdef CONFIG_PHYS_ADDR_T_64BIT
 	if (cpu_has_64bits)
@@ -2279,7 +2285,7 @@ static void build_r4000_tlb_load_handler(void)
 #endif
 
 	uasm_l_nopage_tlbl(&l, p);
-	if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
+	if (loongson_llsc_war())
 		uasm_i_sync(&p, 0);
 	build_restore_work_registers(&p);
 #ifdef CONFIG_CPU_MICROMIPS
@@ -2335,7 +2341,7 @@ static void build_r4000_tlb_store_handler(void)
 #endif
 
 	uasm_l_nopage_tlbs(&l, p);
-	if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
+	if (loongson_llsc_war())
 		uasm_i_sync(&p, 0);
 	build_restore_work_registers(&p);
 #ifdef CONFIG_CPU_MICROMIPS
@@ -2392,7 +2398,7 @@ static void build_r4000_tlb_modify_handler(void)
 #endif
 
 	uasm_l_nopage_tlbm(&l, p);
-	if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
+	if (loongson_llsc_war())
 		uasm_i_sync(&p, 0);
 	build_restore_work_registers(&p);
 #ifdef CONFIG_CPU_MICROMIPS

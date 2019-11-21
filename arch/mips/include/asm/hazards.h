@@ -23,7 +23,8 @@
  * TLB hazards
  */
 #if (defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)) && \
-	!defined(CONFIG_CPU_CAVIUM_OCTEON) && !defined(CONFIG_LOONGSON3_ENHANCEMENT)
+	!defined(CONFIG_CPU_CAVIUM_OCTEON) && !defined(CONFIG_LOONGSON3_ENHANCEMENT) && \
+	!defined(CONFIG_CPU_LOONGSON2K)
 
 /*
  * MIPSR2 defines ehb for hazard avoidance
@@ -159,7 +160,8 @@ do {									\
 
 #elif defined(CONFIG_MIPS_ALCHEMY) || defined(CONFIG_CPU_CAVIUM_OCTEON) || \
 	defined(CONFIG_CPU_LOONGSON2) || defined(CONFIG_LOONGSON3_ENHANCEMENT) || \
-	defined(CONFIG_CPU_R10000) || defined(CONFIG_CPU_R5500) || defined(CONFIG_CPU_XLR)
+	defined(CONFIG_CPU_R10000) || defined(CONFIG_CPU_R5500) || \
+	defined(CONFIG_CPU_XLR) || defined(CONFIG_CPU_LOONGSON2K)
 
 /*
  * R10000 rocks - all hazards handled in hardware, so this becomes a nobrainer.

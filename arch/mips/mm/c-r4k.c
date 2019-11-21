@@ -1594,7 +1594,11 @@ static void __init loongson3_sc_init(void)
 				  c->scache.ways *
 				  c->scache.linesz;
 	/* Loongson-3 has 4 cores, 1MB scache for each. scaches are shared */
+#ifdef CONFIG_CPU_LOONGSON2K
+	scache_size *= 2;
+#else
 	scache_size *= 4;
+#endif
 	c->scache.waybit = 0;
 	c->scache.waysize = scache_size / c->scache.ways;
 	pr_info("Unified secondary cache %ldkB %s, linesize %d bytes.\n",
@@ -1658,6 +1662,7 @@ static void setup_scache(void)
 		return;
 
 	case CPU_LOONGSON3:
+	case CPU_LOONGSON2K:
 		loongson3_sc_init();
 		return;
 
@@ -1927,6 +1932,7 @@ void r4k_cache_init(void)
 		current_cpu_data.options |= MIPS_CPU_INCLUSIVE_CACHES;
 		break;
 	case CPU_LOONGSON3:
+	case CPU_LOONGSON2K:
 		/* Loongson-3 maintains cache coherency by hardware */
 		__flush_cache_all	= cache_noop;
 		__flush_cache_vmap	= cache_noop;

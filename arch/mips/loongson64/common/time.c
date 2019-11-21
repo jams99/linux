@@ -12,14 +12,17 @@
 
 #include <loongson.h>
 #include <cs5536/cs5536_mfgpt.h>
+#include <loongson-2k/2k1000.h>
 
 void __init plat_time_init(void)
 {
 	/* setup mips r4k timer */
 	mips_hpt_frequency = cpu_clock_freq / 2;
 
-#ifdef CONFIG_RS780_HPET
+#if defined CONFIG_RS780_HPET
 	setup_hpet_timer();
+#elif defined CONFIG_CPU_LOONGSON2K
+	ls2k_time_init();
 #else
 	setup_mfgpt0_timer();
 #endif

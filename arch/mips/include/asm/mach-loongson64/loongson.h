@@ -23,6 +23,7 @@ extern void mach_prepare_shutdown(void);
 extern u32 cpu_clock_freq;
 extern u32 memsize, highmemsize;
 extern const struct plat_smp_ops loongson3_smp_ops;
+extern const struct plat_smp_ops loongson2k_smp_ops;
 
 /* loongson-specific command line, env and memory initialization */
 extern void __init prom_init_memory(void);

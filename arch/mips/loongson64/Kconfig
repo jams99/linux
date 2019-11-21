@@ -93,6 +93,29 @@ config LOONGSON_MACH3X
 	help
 		Generic Loongson 3 family machines utilize the 3A/3B revision
 		of Loongson processor and RS780/SBX00 chipset.
+		
+config LOONGSON_MACH2K
+	bool "Generic Loongson 2K family machines"
+	select GENERIC_ISA_DMA_SUPPORT_BROKEN
+	select BOOT_ELF32
+	select CSRC_R4K
+	select CEVT_R4K
+#	select FORCE_PCI
+	select ISA
+	select IRQ_MIPS_CPU
+	select NR_CPUS_DEFAULT_4
+	select SYS_HAS_CPU_LOONGSON2K
+	select SYS_HAS_EARLY_PRINTK
+	select SYS_SUPPORTS_SMP
+	select SYS_SUPPORTS_64BIT_KERNEL
+	select SYS_SUPPORTS_HIGHMEM
+	select SYS_SUPPORTS_LITTLE_ENDIAN
+	select LOONGSON_MC146818
+	select ZONE_DMA32
+	help
+		Generic Loongson 2K family machines utilize the 2K SOC revision
+		of Loongson processor.
+		
 endchoice
 
 config CS5536
@@ -126,7 +149,7 @@ config RS780_HPET
 config LOONGSON_UART_BASE
 	bool
 	default y
-	depends on EARLY_PRINTK || SERIAL_8250
+	depends on !SYS_HAS_CPU_LOONGSON2K && (EARLY_PRINTK || SERIAL_8250)
 
 config LOONGSON_MC146818
 	bool
@@ -135,4 +158,17 @@ config LOONGSON_MC146818
 config LEFI_FIRMWARE_INTERFACE
 	bool
 
+choice
+	prompt "Devicetree selection"
+	depends on LOONGSON_MACH2K
+	default DTB_LOONGSON2K1000_EVAL
+	help
+	  Select the devicetree.
+
+	config DTB_LOONGSON2K1000_EVAL
+		bool "LOONGSON 2K1000 eval kit"
+		depends on LOONGSON_MACH2K
+		select BUILTIN_DTB
+
+endchoice
 endif # MACH_LOONGSON64

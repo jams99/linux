@@ -23,6 +23,7 @@ ifdef CONFIG_CPU_LOONGSON2F_WORKAROUNDS
 endif
 
 cflags-$(CONFIG_CPU_LOONGSON3)	+= -Wa,--trap
+cflags-$(CONFIG_CPU_LOONGSON2K)	+= -Wa,--trap
 
 #
 # Some versions of binutils, not currently mainline as of 2019/02/04, support
@@ -45,6 +46,7 @@ cflags-$(CONFIG_CPU_LOONGSON3)	+= -Wa,--trap
 # this later - for now it ensures vendor toolchains don't cause problems.
 #
 cflags-$(CONFIG_CPU_LOONGSON3)	+= $(call as-option,-Wa$(comma)-mno-fix-loongson3-llsc,)
+cflags-$(CONFIG_CPU_LOONGSON2K)	+= $(call as-option,-Wa$(comma)-mno-fix-loongson3-llsc,)
 
 #
 # binutils from v2.25 on and gcc starting from v4.9.0 treat -march=loongson3a
@@ -57,12 +59,18 @@ ifeq ($(call cc-ifversion, -ge, 0409, y), y)
   ifeq ($(call ld-ifversion, -ge, 225000000, y), y)
     cflags-$(CONFIG_CPU_LOONGSON3)  += \
       $(call cc-option,-march=loongson3a -U_MIPS_ISA -D_MIPS_ISA=_MIPS_ISA_MIPS64)
+    cflags-$(CONFIG_CPU_LOONGSON2K)  += \
+      $(call cc-option,-march=gs264e,-mips64r2 -U_MIPS_ISA -D_MIPS_ISA=_MIPS_ISA_MIPS64)
   else
     cflags-$(CONFIG_CPU_LOONGSON3)  += \
+      $(call cc-option,-march=mips64r2,-mips64r2 -U_MIPS_ISA -D_MIPS_ISA=_MIPS_ISA_MIPS64)
+    cflags-$(CONFIG_CPU_LOONGSON2K)  += \
       $(call cc-option,-march=mips64r2,-mips64r2 -U_MIPS_ISA -D_MIPS_ISA=_MIPS_ISA_MIPS64)
   endif
 else
     cflags-$(CONFIG_CPU_LOONGSON3)  += \
+      $(call cc-option,-march=mips64r2,-mips64r2 -U_MIPS_ISA -D_MIPS_ISA=_MIPS_ISA_MIPS64)
+    cflags-$(CONFIG_CPU_LOONGSON2K)  += \
       $(call cc-option,-march=mips64r2,-mips64r2 -U_MIPS_ISA -D_MIPS_ISA=_MIPS_ISA_MIPS64)
 endif
 
@@ -79,3 +87,4 @@ cflags-$(CONFIG_MACH_LOONGSON64) += -I$(srctree)/arch/mips/include/asm/mach-loon
 load-$(CONFIG_LEMOTE_FULOONG2E) += 0xffffffff80100000
 load-$(CONFIG_LEMOTE_MACH2F) += 0xffffffff80200000
 load-$(CONFIG_LOONGSON_MACH3X) += 0xffffffff80200000
+load-$(CONFIG_LOONGSON_MACH2K) += 0xffffffff80200000

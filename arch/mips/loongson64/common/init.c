@@ -39,15 +39,19 @@ void __init prom_init(void)
 	set_io_port_base((unsigned long)
 		ioremap(LOONGSON_PCIIO_BASE, LOONGSON_PCIIO_SIZE));
 
-#ifdef CONFIG_NUMA
+#if defined (CONFIG_NUMA)
 	prom_init_numa_memory();
-#else
+#elif !defined (CONFIG_USE_OF)
 	prom_init_memory();
 #endif
 
 	/*init the uart base address */
 	prom_init_uart_base();
+#ifdef CONFIG_CPU_LOONGSON2K
+	register_smp_ops(&loongson2k_smp_ops);
+#else
 	register_smp_ops(&loongson3_smp_ops);
+#endif
 	board_nmi_handler_setup = mips_nmi_setup;
 }
 

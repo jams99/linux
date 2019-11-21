@@ -4,7 +4,8 @@
 #
 
 obj-y += setup.o init.o cmdline.o env.o time.o reset.o irq.o \
-    bonito-irq.o mem.o machtype.o platform.o serial.o
+    bonito-irq.o mem.o machtype.o platform.o
+obj-$(CONFIG_LOONGSON_UART_BASE) += serial.o
 obj-$(CONFIG_PCI) += pci.o
 
 #

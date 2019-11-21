@@ -1625,7 +1625,11 @@ static const struct mips_perf_event *mipsxx_pmu_map_raw_event(u64 config)
 		break;
 	case CPU_LOONGSON3:
 		raw_event.cntr_mask = raw_id > 127 ? CNTR_ODD : CNTR_EVEN;
-	break;
+		break;
+	case CPU_LOONGSON2K:
+		base_id = raw_id;
+		raw_event.cntr_mask = CNTR_ALL;
+		break;
 	}
 
 	raw_event.event_id = base_id;
